@@ -1,0 +1,35 @@
+--- a/arch/arm/boot/dts/am335x-bonegreen.dts	2021-05-03 13:02:10.330102067 +0200
++++ b/arch/arm/boot/dts/am335x-bonegreen.dts	2021-05-03 13:03:21.031492107 +0200
+@@ -21,3 +21,32 @@
+ &sgx {
+ 	status = "okay";
+ };
++
++&am33xx_pinmux {
++  spi1_pins: pinmux_spi1_pins {
++    pinctrl-single,pins = <
++    0x190(PIN_INPUT_PULLDOWN | MUX_MODE3) /*sclk */
++    0x194(PIN_INPUT | MUX_MODE3) /* d0 */
++    0x198(PIN_OUTPUT_PULLDOWN | MUX_MODE3) /* d1 */
++    0x19c(PIN_OUTPUT_PULLUP | MUX_MODE3) /* cs0 */
++    0x1a4(PIN_INPUT | MUX_MODE7) /* gpio3_19 */
++    0x1ac(PIN_OUTPUT_PULLDOWN | MUX_MODE7) /* gpio3_21 */
++    0x044(PIN_OUTPUT_PULLUP | MUX_MODE7) /* gpio1_17 */ 
++	>;
++  };
++};
++
++&spi1 {
++  status = "okay";
++  pinctrl-names = "default";
++  pinctrl-0 = <&spi1_pins> ;
++  mrf24j40@0 {
++    compatible = "mrf24j40mc";
++    spi-max-frequency = <10000000> ;
++    reg = <0> ; /* CHIPSEL */
++    interrupts = <19 4> ;
++    interrupt-parent = <&gpio3> ;
++    mrf24j40-wake = <&gpio3 21 1>;
++    mrf24j40-reset = <&gpio1 17 1 > ;
++  };
++};
